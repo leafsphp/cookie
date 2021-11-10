@@ -22,7 +22,10 @@
     "autoload": {
         "psr-4": {
             "Leaf\\Http\\": "src"
-        }
+        },
+        "files": [
+            "src/functions.php"
+        ]
     },
     "minimum-stability": "stable"
 }

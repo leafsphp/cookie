@@ -4,8 +4,9 @@ if (!function_exists('cookie')) {
     /**
      * Return cookie data/object or set cookie data
      *
-     * @param string|null $key — The cookie data to set/get
      * @param mixed $key — The data to set
+     * @param null $value
+     * @return \Leaf\Http\Cookie|mixed|void|null
      */
     function cookie($key = null, $value = null)
     {
@@ -17,6 +18,6 @@ if (!function_exists('cookie')) {
             return \Leaf\Http\Cookie::get($key);
         }
 
-        return \Leaf\Http\Cookie::set($key, $value);
+        \Leaf\Http\Cookie::set($key, $value);
     }
 }

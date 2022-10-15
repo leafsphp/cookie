@@ -40,7 +40,8 @@ class Cookie
 	public static function setDefaults(array $defaults)
 	{
 		static::$options = array_merge(
-			static::$options, $defaults
+			static::$options,
+			$defaults
 		);
 	}
 
@@ -56,7 +57,7 @@ class Cookie
 		if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
 			\Leaf\Config::set('response.cookies', array_merge(
 				\Leaf\Config::get('response.cookies'),
-				[$key,  $value, $options['expires'] ?? (time() + (60 * 60 * 24 * 7))],
+				[$key,  $value, $options['expires'] ?? (time() + 604800)],
 			));
 
 			return;
@@ -90,21 +91,21 @@ class Cookie
 		if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
 			\Leaf\Config::set('response.cookies', array_merge(
 				\Leaf\Config::get('response.cookies'),
-				[$name,  $value, $expires ?? (time() + (60 * 60 * 24 * 7))],
+				[$name,  $value, $expires ?? (time() + 604800)],
 			));
 
 			return;
 		}
 
-		self::set($name, $value, ['expires' => $expires  ?? (time() + (60 * 60 * 24 * 7))]);
+		self::set($name, $value, ['expires' => $expires  ?? (time() + 604800)]);
 	}
 
 	/**
 	 * Get all set cookies
 	 */
 	public static function all(): array
-    {
-		return $_COOKIE;
+	{
+		return $_COOKIE ?? [];
 	}
 
 	/**
@@ -122,6 +123,13 @@ class Cookie
 	{
 		if (is_array($key)) {
 			foreach ($key as $name) {
+				if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
+					\Leaf\Config::set('response.cookies', array_merge(
+						\Leaf\Config::get('response.cookies'),
+						[$key, '', time() - 604800],
+					));
+				}
+
 				self::unset($name);
 			}
 		} else {

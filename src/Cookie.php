@@ -53,6 +53,15 @@ class Cookie
 	 */
 	public static function set($key, $value = '', array $options = [])
 	{
+		if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
+			\Leaf\Config::set('response.cookies', array_merge(
+				\Leaf\Config::get('response.cookies'),
+				[$key,  $value, $options['expires'] ?? (time() + (60 * 60 * 24 * 7))],
+			));
+
+			return;
+		}
+
 		if (is_array($key)) {
 			foreach ($key as $name => $value) {
 				self::set($name, $value);
@@ -76,9 +85,18 @@ class Cookie
 	 * @param string $value If string, the value of cookie; if array, properties for cookie including: value, expire, path, domain, secure, httponly
 	 * @param string $expires When the cookie expires. Default: 7 days
 	 */
-	public static function simpleCookie(string $name, string $value, string $expires = '7 days')
+	public static function simpleCookie(string $name, string $value, string $expires = null)
 	{
-		self::set($name, $value, ['expires' => $expires]);
+		if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
+			\Leaf\Config::set('response.cookies', array_merge(
+				\Leaf\Config::get('response.cookies'),
+				[$name,  $value, $expires ?? (time() + (60 * 60 * 24 * 7))],
+			));
+
+			return;
+		}
+
+		self::set($name, $value, ['expires' => $expires  ?? (time() + (60 * 60 * 24 * 7))]);
 	}
 
 	/**

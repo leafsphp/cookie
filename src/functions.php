@@ -4,20 +4,17 @@ if (!function_exists('cookie')) {
     /**
      * Return cookie data/object or set cookie data
      *
-     * @param mixed $key — The data to set
-     * @param null $value
-     * @return \Leaf\Http\Cookie|mixed|void|null
+     * @return \Leaf\Http\Cookie
      */
-    function cookie($key = null, $value = null)
+    function cookie()
     {
-        if (!$key && !$value) {
-            return new \Leaf\Http\Cookie();
+        $cookie = Leaf\Config::get('cookie')['instance'] ?? null;
+
+        if (!$cookie) {
+            $cookie = new \Leaf\Http\Cookie();
+            Leaf\Config::set('cookie', ['instance' => $cookie]);
         }
 
-        if (!$value && is_string($key)) {
-            return \Leaf\Http\Cookie::get($key);
-        }
-
-        \Leaf\Http\Cookie::set($key, $value);
+        return $cookie;
     }
 }

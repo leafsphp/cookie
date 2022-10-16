@@ -57,7 +57,7 @@ class Cookie
 		if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
 			\Leaf\Config::set('response.cookies', array_merge(
 				\Leaf\Config::get('response.cookies'),
-				[$key,  $value, $options['expires'] ?? (time() + 604800)],
+				[$key => [$value, $options['expires'] ?? (time() + 604800)]],
 			));
 
 			return;
@@ -91,7 +91,7 @@ class Cookie
 		if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
 			\Leaf\Config::set('response.cookies', array_merge(
 				\Leaf\Config::get('response.cookies'),
-				[$name,  $value, $expires ?? (time() + 604800)],
+				[$name => [$value, $expires ?? (time() + 604800)]],
 			));
 
 			return;
@@ -126,7 +126,7 @@ class Cookie
 				if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
 					\Leaf\Config::set('response.cookies', array_merge(
 						\Leaf\Config::get('response.cookies'),
-						[$key, '', time() - 604800],
+						[$key => ['', time() - 604800]],
 					));
 				}
 

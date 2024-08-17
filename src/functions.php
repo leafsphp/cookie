@@ -8,13 +8,12 @@ if (!function_exists('cookie')) {
      */
     function cookie()
     {
-        $cookie = Leaf\Config::get('cookie')['instance'] ?? null;
-
-        if (!$cookie) {
-            $cookie = new \Leaf\Http\Cookie();
-            Leaf\Config::set('cookie', ['instance' => $cookie]);
+        if (!(\Leaf\Config::getStatic('cookie'))) {
+            \Leaf\Config::singleton('cookie', function () {
+                return new \Leaf\Http\Cookie();
+            });
         }
 
-        return $cookie;
+        return \Leaf\Config::get('cookie');
     }
 }

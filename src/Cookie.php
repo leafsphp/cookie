@@ -56,7 +56,7 @@ class Cookie
 	{
 		if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
 			\Leaf\Config::set('response.cookies', array_merge(
-				\Leaf\Config::get('response.cookies'),
+				\Leaf\Config::getStatic('response.cookies'),
 				[$key => [$value, $options['expires'] ?? (time() + 604800)]],
 			));
 
@@ -88,16 +88,7 @@ class Cookie
 	 */
 	public static function simpleCookie(string $name, string $value, string $expires = null)
 	{
-		if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
-			\Leaf\Config::set('response.cookies', array_merge(
-				\Leaf\Config::get('response.cookies'),
-				[$name => [$value, $expires ?? (time() + 604800)]],
-			));
-
-			return;
-		}
-
-		self::set($name, $value, ['expires' => $expires  ?? (time() + 604800)]);
+		self::set($name, $value, ['expires' => $expires ?? (time() + 604800)]);
 	}
 
 	/**
@@ -125,7 +116,7 @@ class Cookie
 			foreach ($key as $name) {
 				if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
 					\Leaf\Config::set('response.cookies', array_merge(
-						\Leaf\Config::get('response.cookies'),
+						\Leaf\Config::getStatic('response.cookies'),
 						[$key => ['', time() - 604800]],
 					));
 				}

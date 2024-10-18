@@ -65,16 +65,16 @@ class Cookie
 
 		if (is_array($key)) {
 			foreach ($key as $name => $value) {
-				self::set($name, $value);
+				static::set($name, $value);
 			}
 		} else {
 			setcookie($key, $value, [
-				'expires' => ($options['expire'] ?? $options['expires']) ?? self::$options['expire'],
-				'path' => $options['path'] ?? self::$options['path'],
-				'domain' => $options['domain'] ?? self::$options['domain'],
-				'secure' => $options['secure'] ?? self::$options['secure'],
-				'httponly' => $options['httponly'] ?? self::$options['httponly'],
-				'samesite' => $options['samesite'] ?? self::$options['samesite'],
+				'expires' => ($options['expire'] ?? $options['expires']) ?? static::$options['expires'],
+				'path' => $options['path'] ?? static::$options['path'],
+				'domain' => $options['domain'] ?? static::$options['domain'],
+				'secure' => $options['secure'] ?? static::$options['secure'],
+				'httponly' => $options['httponly'] ?? static::$options['httponly'],
+				'samesite' => $options['samesite'] ?? static::$options['samesite'],
 			]);
 		}
 	}
@@ -86,7 +86,7 @@ class Cookie
 	 * @param string $value If string, the value of cookie; if array, properties for cookie including: value, expire, path, domain, secure, httponly
 	 * @param string $expires When the cookie expires. Default: 7 days
 	 */
-	public static function simpleCookie(string $name, string $value, string $expires = null)
+	public static function simpleCookie(string $name, string $value, string $expires = null): void
 	{
 		self::set($name, $value, ['expires' => $expires ?? (time() + 604800)]);
 	}
@@ -101,6 +101,8 @@ class Cookie
 
 	/**
 	 * Get a particular cookie
+	 * 
+	 * @param string|array The cookie(s) to delete
 	 */
 	public static function get($param)
 	{
@@ -110,7 +112,7 @@ class Cookie
 	/**
 	 * Unset a particular cookie
 	 */
-	public static function unset($key)
+	public static function unset($key): void
 	{
 		if (is_array($key)) {
 			foreach ($key as $name) {
@@ -129,12 +131,30 @@ class Cookie
 	}
 
 	/**
+	 * Delete a particular cookie
+	 * 
+	 * @param string|array The cookie(s) to delete
+	 */
+	public static function delete($key): void
+	{
+		static::unset($key);
+	}
+
+	/**
 	 * Unset all cookies
 	 */
-	public static function unsetAll()
+	public static function unsetAll(): void
 	{
 		foreach ($_COOKIE as $key => &$value) {
 			self::unset($key);
 		}
+	}
+
+	/**
+	 * Delete all cookies
+	 */
+	public static function deleteAll(): void
+	{
+		static::unsetAll();
 	}
 }

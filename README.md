@@ -6,8 +6,6 @@
   <br><br>
 </p>
 
-# Leaf PHP
-
 [![Latest Stable Version](https://poser.pugx.org/leafs/cookie/v/stable)](https://packagist.org/packages/leafs/cookie)
 [![Total Downloads](https://poser.pugx.org/leafs/cookie/downloads)](https://packagist.org/packages/leafs/cookie)
 [![License](https://poser.pugx.org/leafs/cookie/license)](https://packagist.org/packages/leafs/cookie)

@@ -86,7 +86,7 @@ class Cookie
 	 * @param string $value If string, the value of cookie; if array, properties for cookie including: value, expire, path, domain, secure, httponly
 	 * @param string $expires When the cookie expires. Default: 7 days
 	 */
-	public static function simpleCookie(string $name, string $value, string $expires = null): void
+	public static function simpleCookie(string $name, string $value, ?string $expires = null): void
 	{
 		self::set($name, $value, ['expires' => $expires ?? (time() + 604800)]);
 	}

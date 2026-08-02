@@ -64,8 +64,8 @@ class Cookie
 		}
 
 		if (is_array($key)) {
-			foreach ($key as $name => $value) {
-				static::set($name, $value);
+			foreach ($key as $name => $cookieValue) {
+				static::set($name, $cookieValue, $options);
 			}
 		} else {
 			setcookie($key, $value, [
@@ -86,8 +86,12 @@ class Cookie
 	 * @param string $value If string, the value of cookie; if array, properties for cookie including: value, expire, path, domain, secure, httponly
 	 * @param string $expires When the cookie expires. Default: 7 days
 	 */
-	public static function simpleCookie(string $name, string $value, ?string $expires = null): void
+	public static function simpleCookie(string $name, string $value, $expires = null): void
 	{
+		if (is_string($expires)) {
+			$expires = strtotime($expires) ?: null;
+		}
+
 		self::set($name, $value, ['expires' => $expires ?? (time() + 604800)]);
 	}
 
@@ -116,18 +120,29 @@ class Cookie
 	{
 		if (is_array($key)) {
 			foreach ($key as $name) {
-				if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
-					\Leaf\Config::set('response.cookies', array_merge(
-						\Leaf\Config::getStatic('response.cookies'),
-						[$key => ['', time() - 604800]],
-					));
-				}
-
 				self::unset($name);
 			}
-		} else {
-			setcookie($key, '', time() - 86400);
+
+			return;
 		}
+
+		if (class_exists('Leaf\Eien\Server') && PHP_SAPI === 'cli') {
+			\Leaf\Config::set('response.cookies', array_merge(
+				\Leaf\Config::getStatic('response.cookies'),
+				[$key => ['', time() - 604800]],
+			));
+
+			return;
+		}
+
+		setcookie($key, '', [
+			'expires' => time() - 86400,
+			'path' => static::$options['path'],
+			'domain' => static::$options['domain'],
+			'secure' => static::$options['secure'],
+			'httponly' => static::$options['httponly'],
+			'samesite' => static::$options['samesite'],
+		]);
 	}
 
 	/**
@@ -145,7 +160,7 @@ class Cookie
 	 */
 	public static function unsetAll(): void
 	{
-		foreach ($_COOKIE as $key => &$value) {
+		foreach (array_keys($_COOKIE) as $key) {
 			self::unset($key);
 		}
 	}

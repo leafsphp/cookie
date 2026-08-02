@@ -33,5 +33,16 @@
         "branch-alias": {
             "dev-v5.x": "5.0.x-dev"
         }
+    },
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "pestphp/pest": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
